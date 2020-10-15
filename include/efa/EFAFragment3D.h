@@ -53,7 +53,7 @@ public:
   void addFace(EFAFace * new_face);
   std::set<EFANode *> getFaceNodes(unsigned int face_id) const;
   EFAElement3D * getHostElement() const;
-  std::vector<EFAFragment3D *> split();
+  std::vector<EFAFragment3D *> split(std::map<unsigned int, EFANode *> & EmbeddedNodes);
   void findFacesAdjacentToFaces();
   EFAFace * getAdjacentFace(unsigned int face_id, unsigned int edge_id) const;
   void removeEmbeddedNode(EFANode * emb_node);

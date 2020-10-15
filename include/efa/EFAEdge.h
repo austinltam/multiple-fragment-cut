@@ -38,6 +38,7 @@ public:
   //  bool operator < (const EFAEdge & other) const;
 
   void addIntersection(double position, EFANode * embedded_node_tmp, EFANode * from_node);
+  void addIntersection(double position, EFANode * embedded_node_tmp, EFANode * from_node, unsigned int cut_plane_idx);
   void resetIntersection(double position, EFANode * embedded_node_tmp, EFANode * from_node);
   void copyIntersection(const EFAEdge & other, unsigned int from_node_id);
   EFANode * getNode(unsigned int index) const;

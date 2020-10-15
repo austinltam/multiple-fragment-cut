@@ -131,8 +131,9 @@ public:
   std::vector<EFANode *> getCommonNodes(const EFAElement2D * other_elem) const;
 
   void addInteriorNode(EFAFaceNode * faceNode);
-  bool isInteriorNode(EFANode * node, EFAFaceNode & faceNode) const;
-  bool getNodeParametricCoordinate(EFANode * node, std::vector<double> & para_coor) const;
+  bool isInteriorNode(EFANode * node, EFAFaceNode * faceNode);
+  bool getNodeParametricCoordinate(EFANode * node, std::vector<double> & para_coor);
+  unsigned int getNewCutPlaneIdx();
 
 private:
   // given the 1D parent coord of a point in an 2D element edge, translate it to 2D parametric

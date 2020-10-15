@@ -62,7 +62,7 @@ public:
   bool containsFace(const EFAFace * other_face) const;
   bool ownsEdge(const EFAEdge * other_edge) const;
   void removeEmbeddedNode(EFANode * emb_node);
-  std::vector<EFAFace *> split() const;
+  std::vector<EFAFace *> split(std::map<unsigned int, EFANode *> & EmbeddedNodes) const;
   EFAFace * combineWithFace(const EFAFace * other_face) const;
   void resetEdgeIntersection(const EFAFace * ref_face);
 

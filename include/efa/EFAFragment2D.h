@@ -52,13 +52,13 @@ public:
   void addEdge(EFAEdge * new_edge);
   std::set<EFANode *> getEdgeNodes(unsigned int edge_id) const;
   EFAElement2D * getHostElement() const;
-  std::vector<EFAFragment2D *> split();
-  bool EFAFragment2D::IntersectSegmentWithCutLine(
+  std::vector<EFAFragment2D *> split(std::map<unsigned int, EFANode *> & EmbeddedNodes);
+  bool IntersectSegmentWithCutLine(
       const std::vector<double> & segment_point1,
       const std::vector<double> & segment_point2,
       const std::vector<double> & cutting_line_point1,
       const std::vector<double> & cutting_line_point2,
-      const std::vector<double> & intersect_Point) const;
-  Real EFAFragment2D::crossProduct2D(const std::vector<double> & point_a, const std::vector<double> & point_b) const;
-  double EFAFragment2D::distanceBetweenPoints(const std::vector<double> & point_a, const std::vector<double> & point_b) const;
+      std::vector<double> & intersect_Point);
+  Real crossProduct2D(const std::vector<double> & point_a, const std::vector<double> & point_b) const;
+  double distanceBetweenPoints(const std::vector<double> & point_a, const std::vector<double> & point_b) const;
 };
