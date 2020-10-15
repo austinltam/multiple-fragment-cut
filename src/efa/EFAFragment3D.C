@@ -312,14 +312,14 @@ EFAFragment3D::getHostElement() const
 }
 
 std::vector<EFAFragment3D *>
-EFAFragment3D::split()
+EFAFragment3D::split(std::map<unsigned int, EFANode *> & EmbeddedNodes)
 {
   // This method will split one existing fragment into one or two new fragments
   std::vector<EFAFragment3D *> new_fragments;
   std::vector<std::vector<EFAFace *>> all_subfaces;
   for (unsigned int i = 0; i < _faces.size(); ++i)
   {
-    std::vector<EFAFace *> subfaces = _faces[i]->split();
+    std::vector<EFAFace *> subfaces = _faces[i]->split(EmbeddedNodes);
     all_subfaces.push_back(subfaces);
   }
 

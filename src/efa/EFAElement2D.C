@@ -836,8 +836,8 @@ EFAElement2D::updateFragments(const std::set<EFAElement *> & CrackTipElements,
   unsigned int num_cut_frag_edges = _fragments[0]->getNumCuts();
   unsigned int num_cut_nodes = _fragments[0]->getNumCutNodes();
   unsigned int num_frag_edges = _fragments[0]->numEdges();
-  if (num_cut_frag_edges > 3)
-    EFAError("In element ", _id, " there are more than 2 cut fragment edges");
+  //if (num_cut_frag_edges > 3)
+    //EFAError("In element ", _id, " there are more than 2 cut fragment edges");
 
   if (num_cut_frag_edges == 0 && num_cut_nodes == 0)
   {
@@ -857,7 +857,7 @@ EFAElement2D::updateFragments(const std::set<EFAElement *> & CrackTipElements,
   if (num_cut_frag_edges == 3)
     new_frags = branchingSplit(EmbeddedNodes);
   else
-    new_frags = _fragments[0]->split();
+    new_frags = _fragments[0]->split(EmbeddedNodes);
 
   delete _fragments[0]; // delete the old fragment
   _fragments.clear();
@@ -1728,7 +1728,7 @@ EFAElement2D::addEdgeCut(unsigned int edge_id,
     if (embedded_node && embedded_node != old_emb)
     {
     	//Check this, pointer might be wrong
-    	old_emb.addCutPlaneID(cut_plane_idx);
+    	old_emb->addCutPlaneID(cut_plane_idx);
     	return;
 //      EFAError("Attempting to add edge intersection when one already exists with different node.",
 //               " elem: ",
@@ -1904,7 +1904,7 @@ EFAElement2D::addFragmentEdgeCut(unsigned int frag_edge_id,
       //LOOK HERE to add cut plane id
       local_embedded = new EFANode(new_node_id, EFANode::N_CATEGORY_EMBEDDED);
       EmbeddedNodes.insert(std::make_pair(new_node_id, local_embedded));
-      frag_edge->addIntersection(position, local_embedded, edge_node1);
+      frag_edge->addIntersection(position, local_embedded, edge_node1, cut_plane_idx);
 
       // save this interior embedded node to FaceNodes
       // TODO: for unstructured elements, the following calution gives you inaccurate position of
@@ -2088,15 +2088,15 @@ EFAElement2D::getCommonNodes(const EFAElement2D * other_elem) const
 void
 EFAElement2D::addInteriorNode(EFAFaceNode * faceNode)
 {
-  _interior_nodes.pushback(faceNode);
+  _interior_nodes.push_back(faceNode);
 }
 
 bool
-EFAElement2D::isInteriorNode(EFANode * node, EFAFaceNode & faceNode)
+EFAElement2D::isInteriorNode(EFANode * node, EFAFaceNode * faceNode)
 {
   for (unsigned int i = 0; i < _interior_nodes.size(); ++i)
   {
-    if (node == _interior_nodes[i].getNode())
+    if (node == _interior_nodes[i]->getNode())
     {
       faceNode = _interior_nodes[i];
       return true;
@@ -2106,13 +2106,13 @@ EFAElement2D::isInteriorNode(EFANode * node, EFAFaceNode & faceNode)
 }
 
 bool
-EFAElement2D::getNodeParametricCoordinate(EFANode * node, std::vector<double> & para_coor) const
+EFAElement2D::getNodeParametricCoordinate(EFANode * node, std::vector<double> & para_coor)
 {
-  EFAFaceNode * faceNode;
+  EFAFaceNode * faceNode = nullptr;
   if (isInteriorNode(node, faceNode))
   {
-    para_coor[0] = faceNode.getParametricCoordinates(0);
-    para_coor[1] = faceNode.getParametricCoordinates(1);
+    para_coor[0] = faceNode->getParametricCoordinates(0);
+    para_coor[1] = faceNode->getParametricCoordinates(1);
     return true;
   }
   else
@@ -2137,4 +2137,26 @@ EFAElement2D::getNodeParametricCoordinate(EFANode * node, std::vector<double> & 
     }
     return edge_found;
   }
+}
+
+unsigned int
+EFAElement2D::getNewCutPlaneIdx()
+{
+  unsigned int cut_plane_idx = -1;
+  for (unsigned int i = 0; i < _nodes.size(); ++i)
+  {
+    if ((_nodes[i]->category() ==
+        EFANode::N_CATEGORY_EMBEDDED_PERMANENT) || (_nodes[i]->category() == EFANode::N_CATEGORY_EMBEDDED)) // if current node has been cut change fragment
+    {
+        //note the cut plane ids from nodes to determine max
+      std::vector<unsigned int> current_node_cut_ids;
+      current_node_cut_ids = _nodes[i]->getCutPlaneIDs();
+      for (unsigned int id = 0; id < current_node_cut_ids.size(); ++id)
+      {
+        if (cut_plane_idx < current_node_cut_ids[id])
+            cut_plane_idx = current_node_cut_ids[id];
+      }
+    }
+  }
+  return (cut_plane_idx+1);
 }

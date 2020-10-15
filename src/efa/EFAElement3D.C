@@ -897,7 +897,7 @@ EFAElement3D::updateFragments(const std::set<EFAElement *> & CrackTipElements,
   }
 
   // split one fragment into one or two new fragments
-  std::vector<EFAFragment3D *> new_frags = _fragments[0]->split();
+  std::vector<EFAFragment3D *> new_frags = _fragments[0]->split(EmbeddedNodes);
   if (new_frags.size() == 1 || new_frags.size() == 2)
   {
     delete _fragments[0]; // delete the old fragment

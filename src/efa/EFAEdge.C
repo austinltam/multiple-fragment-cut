@@ -127,9 +127,21 @@ EFAEdge::getNodeMasters(EFANode * node,
 //}
 
 void
+EFAEdge::addIntersection(double position, EFANode * embedded_node_tmp, EFANode * from_node)
+{
+  _embedded_nodes.push_back(embedded_node_tmp);
+  if (from_node == _edge_node1)
+    _intersection_x.push_back(position);
+  else if (from_node == _edge_node2)
+    _intersection_x.push_back(1.0 - position);
+  else
+    EFAError("In addIntersection from_node does not exist on edge");
+}
+
+void
 EFAEdge::addIntersection(double position, EFANode * embedded_node_tmp, EFANode * from_node, unsigned int cut_plane_idx)
 {
-  embedded_node_tmp.addCutPlaneID(cut_plane_idx)
+    embedded_node_tmp->addCutPlaneID(cut_plane_idx);
   _embedded_nodes.push_back(embedded_node_tmp);
   if (from_node == _edge_node1)
     _intersection_x.push_back(position);
@@ -201,7 +213,6 @@ EFAEdge::hasIntersection() const
   bool has = false;
   if (_edge_node1->parent() != NULL)
     has = has || _edge_node1->parent()->category() == EFANode::N_CATEGORY_EMBEDDED_PERMANENT;
-
   if (_edge_node2->parent() != NULL)
     has = has || _edge_node2->parent()->category() == EFANode::N_CATEGORY_EMBEDDED_PERMANENT;
 

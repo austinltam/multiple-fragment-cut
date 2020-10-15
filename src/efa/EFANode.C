@@ -71,7 +71,7 @@ EFANode::getCutPlaneIDs()
 void
 EFANode::addCutPlaneID(unsigned int cutPlaneID)
 {
-	_cut_plane_id.pushback(cutPlaneID);
+	_cut_plane_id.push_back(cutPlaneID);
 }
 
 bool
@@ -96,8 +96,8 @@ EFANode::moveCutPlaneIDtoPast(unsigned int cutPlaneID)
   {
     if(_cut_plane_id[i] == cutPlaneID)
     {
-      _past_cut_plane_id.pushback(_cut_plane_id[i]);
-      _cut_plane_id.erase(i);
+      _past_cut_plane_id.push_back(_cut_plane_id[i]);
+      _cut_plane_id.erase(_cut_plane_id.begin()+i);
       return;
     }
   }

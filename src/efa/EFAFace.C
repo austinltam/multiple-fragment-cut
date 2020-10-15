@@ -462,14 +462,14 @@ EFAFace::removeEmbeddedNode(EFANode * emb_node)
 }
 
 std::vector<EFAFace *>
-EFAFace::split() const
+EFAFace::split(std::map<unsigned int, EFANode *> & EmbeddedNodes) const
 {
   std::vector<EFAFace *> new_faces;
   if (getNumCuts() > 0)
   {
     // construct a fragment from this face
     EFAFragment2D * frag_tmp = new EFAFragment2D(NULL, this);
-    std::vector<EFAFragment2D *> new_frags_tmp = frag_tmp->split();
+    std::vector<EFAFragment2D *> new_frags_tmp = frag_tmp->split(EmbeddedNodes);
 
     // copy new_frags to new_faces
     for (unsigned int i = 0; i < new_frags_tmp.size(); ++i)
